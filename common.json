@@ -1,0 +1,11 @@
+{
+    "conn": "http://jrencoder:5000",
+    "flavor_alias": {
+        "LDL1": "LiveLDL",
+        "LDL2": "LiveLDLBG",
+        "NetworkID": "53100"
+    },
+    "loop_flavors": [
+        "LiveLDL"
+    ]
+}
