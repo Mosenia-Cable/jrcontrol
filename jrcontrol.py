@@ -116,6 +116,7 @@ def run(pres_id:str, ts:float=0):
             log.info(f"Successfully requested to run presentation {pres_id} (flavor {flavor}).")
         else:
             log.error(f"Failed to request {request_url}, status code {r.status_code}.")
+        PRESENTATIONS.pop(pres_id) # clear the presentation from the bank so it isn't re-run if the same ID happens to be called
     else:
         log.warning(f"Failed to run {pres_id}, no flavor loaded matching ID")
         
