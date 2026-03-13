@@ -58,8 +58,10 @@ def send_alert(text:str="Default String", mode:str="Warning"):
         request_url = jr_conn.rstrip("/") + endpoint
         requests.post(request_url, data=request_data, timeout=10)
 
-def cancel():
+def cancel(pres_id:str, **kwargs):
+    '''Cancels the active presentation and removes a loaded pres_id from the bank, if provided.'''
     global COMMON
+    global PRESENTATIONS
     jr_conn = COMMON.get("conn", "http://localhost:5000")
     endpoint = "/presentation/cancel"
     request_url = jr_conn.rstrip("/") + endpoint
@@ -68,6 +70,11 @@ def cancel():
         log.info("Successfully cancelled the active presentation.")
     else:
         log.error(f"Failed to request {request_url}, status code {r.status_code}.")
+    
+    ## delete loaded from bank if a not-yet-running presentation is cancelled before it's run
+    if pres_id:
+        if PRESENTATIONS.get(pres_id, None) != None: # only try to pop if loaded into bank (not run yet)
+            PRESENTATIONS.pop(pres_id) # popper
 
 def load(pres_id:str, flav_name:str, flav_length:float):
     '''Load a presentation into the bank, in preparation for run.'''
