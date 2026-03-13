@@ -107,7 +107,16 @@ def run(pres_id:str, ts:float=0, **kwargs):
     global PRESENTATIONS
     flavor = PRESENTATIONS.get(pres_id, None)
 
-    ts = round(ts, 3) # jrencoder API only takes floats within an abstract decimal length
+    ts = round(ts, 2) # jrencoder API only takes floats within an abstract decimal length
+    log.debug(f"Desired run time: {ts}")
+    retry_count = 0
+    if not flavor:
+        # if for some reason the RUN is sent faster than the LOAD, we can retry up to 5 times
+        while not flavor and retry_count < 5: 
+            log.warning(f"No flavor loaded matching ID {pres_id}! Trying again... ({retry_count + 1})")
+            flavor = PRESENTATIONS.get(pres_id, None)
+            retry_count += 1
+            time.sleep(0.25)
 
     if flavor:
         global COMMON
@@ -118,6 +127,7 @@ def run(pres_id:str, ts:float=0, **kwargs):
         else: endpoint = "/presentation/run"
         request_url = jr_conn.rstrip("/") + endpoint
         request_data = {"flavor": flavor, "time": int(ts)}
+        log.debug(request_data)
         r = requests.post(request_url, timeout=10, data=request_data)
         if r.status_code == 200:
             log.info(f"Successfully requested to run presentation {pres_id} (flavor {flavor}).")
@@ -125,7 +135,7 @@ def run(pres_id:str, ts:float=0, **kwargs):
             log.error(f"Failed to request {request_url}, status code {r.status_code}.")
         PRESENTATIONS.pop(pres_id) # clear the presentation from the bank so it isn't re-run if the same ID happens to be called
     else:
-        log.warning(f"Failed to run {pres_id}, no flavor loaded matching ID")
+        log.warning(f"Failed to run {pres_id}, no flavor loaded matching the ID.")
         
 
 
@@ -135,8 +145,8 @@ if __name__ == "__main__":
     coloredlogs.install(level="DEBUG")
     load_settings()
     load_star()
-    cancel()
-    load(pres_id=1,flav_name="LDL1")
+    cancel(pres_id=1)
+    load(pres_id=1,flav_name="G",flav_length=120)
     #load(pres_id="LDL1",flav_name="LDL1")
     time.sleep(1)
-    run(pres_id=1,ts=time.time() + 1)
+    run(pres_id=1,ts=0)
