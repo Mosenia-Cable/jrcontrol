@@ -47,7 +47,7 @@ def load_star():
     else:
         log.error(f"Failed to request {request_url}, status code {r.status_code}")
 
-def send_alert(text:str="Default String", mode:str="Warning"):
+def send_alert(text:str="Default String", mode:str="Warning", **kwargs):
     if mode not in ["Warning", "Advisory"]:
         log.error(f"Bad alert mode: {mode}.")
     else:
@@ -76,7 +76,7 @@ def cancel(pres_id:str, **kwargs):
         if PRESENTATIONS.get(pres_id, None) != None: # only try to pop if loaded into bank (not run yet)
             PRESENTATIONS.pop(pres_id) # popper
 
-def load(pres_id:str, flav_name:str, flav_length:float):
+def load(pres_id:str, flav_name:str, flav_length:float, **kwargs):
     '''Load a presentation into the bank, in preparation for run.'''
     # First, let's try to derive an alias for the provided flav_name
     global COMMON
@@ -102,7 +102,7 @@ def load(pres_id:str, flav_name:str, flav_length:float):
     else:
         log.warning(f"Presentation {pres_id} not loaded: no flavor is defined for called name '{flav_name}'")
 
-def run(pres_id:str, ts:float=0):
+def run(pres_id:str, ts:float=0, **kwargs):
     '''Run a loaded presentation at the defined epoch timestamp. If undefined, run immediately.'''
     global PRESENTATIONS
     flavor = PRESENTATIONS.get(pres_id, None)
