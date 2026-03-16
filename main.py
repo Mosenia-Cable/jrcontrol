@@ -6,6 +6,9 @@ log = logging.getLogger(__name__)
 coloredlogs.install(level="DEBUG")
 
 jrcontrol.load_settings()
+
+receiver.SERVER_ADDRESS = jrcontrol.COMMON.get("netrunner", "http://localhost:4000") # get server add from config 
+
 jrcontrol.load_star()
 
 receiver.FUNCTIONS["LF_LOAD"] = jrcontrol.load
