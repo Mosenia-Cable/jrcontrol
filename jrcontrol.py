@@ -58,7 +58,7 @@ def send_alert(text:str="Default String", mode:str="Warning", **kwargs):
         request_url = jr_conn.rstrip("/") + endpoint
         requests.post(request_url, data=request_data, timeout=10)
 
-def cancel(pres_id:str, **kwargs):
+def cancel(pres_id:str=None, **kwargs):
     '''Cancels the active presentation and removes a loaded pres_id from the bank, if provided.'''
     global COMMON
     global PRESENTATIONS
