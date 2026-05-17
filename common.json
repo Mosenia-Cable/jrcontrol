@@ -1,6 +1,7 @@
 {
     "netrunner": "http://192.168.1.41:4000",
     "conn": "http://jrencoder:5000",
+    "ts_offset": 0,
     "flavor_alias": {
         "LDL1": "LiveLDL",
         "LDL2": "LiveLDLBG",

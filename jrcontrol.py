@@ -105,8 +105,10 @@ def load(pres_id:str, flav_name:str, flav_length:float, **kwargs):
 def run(pres_id:str, ts:float=0, **kwargs):
     '''Run a loaded presentation at the defined epoch timestamp. If undefined, run immediately.'''
     global PRESENTATIONS
+    global COMMON
     flavor = PRESENTATIONS.get(pres_id, None)
-
+    ts_offset = float(COMMON.get("ts_offset", 0))
+    ts = ts + ts_offset
     ts = round(ts, 2) # jrencoder API only takes floats within an abstract decimal length
     log.debug(f"Desired run time: {ts}")
     retry_count = 0
