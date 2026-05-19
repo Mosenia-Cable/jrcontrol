@@ -132,7 +132,6 @@ def run(pres_id:str, ts:float=0, **kwargs):
             time.sleep(0.25)
 
     if flavor:
-        global COMMON
         jr_conn = COMMON.get("conn", "http://localhost:5000")
         loop_flavors = COMMON.get("loop_flavors", [])
         if flavor in loop_flavors:
